@@ -3,7 +3,7 @@ class Person:
         self.name = name
         self.address = address
         self.total_money = 100
-        
+
     def deduct_money(self, amount):
         self.total_money -= amount
 
