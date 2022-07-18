@@ -11,13 +11,18 @@ class Fleet:
         # value: person object
         self.rentals = {}
 
-    def add_car(self, reg, make, model, year, mileage, gearbox, fuel_type, colour, seats):
-        """Adds a new car object to the fleet"""
+    def add_car(self, car_obj):
+        """Add a new car object to the fleet"""
 
         # add car object to the dictionary
-        self.cars[reg] = Car(reg, make, model, year, mileage, gearbox, fuel_type, colour, seats)
+        self.cars[car_obj.reg] = car_obj
 
-    def new_rental(self, reg, person):
+    def get_car(self, reg):
+        """Get car object from registration number"""
+
+        return self.cars[reg]
+
+    def add_rental(self, reg, person):
         """Log a person renting a car from the fleet"""
 
         self.rentals[reg] = person

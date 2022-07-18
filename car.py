@@ -1,5 +1,5 @@
 class Car:
-    def __init__(self, reg, make, model, year, mileage, gearbox, fuel_type, colour, seats):
+    def __init__(self, reg, make, model, year, mileage, gearbox, fuel_type, seats):
         self.reg = reg
         self.make = make
         self.model = model
@@ -7,7 +7,6 @@ class Car:
         self.mileage = mileage
         self.gearbox = gearbox
         self.fuel_type = fuel_type
-        self.colour = colour
         self.seats = seats
 
     def __str__(self):
