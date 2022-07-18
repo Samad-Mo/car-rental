@@ -1,55 +1,75 @@
+import datetime
+
 import PySimpleGUI as sg
 
-"""
-    Design pattern multiple windows
-    Using read_all_windows()
-
-    Only 1 window at a time is visible/active on the screen.
-
-    Window1 opens Window2
-    When Window2 closes, Window1 reappears
-    Program exits when Window1 is closed
-"""
-
-
-def make_window1():
-    layout = [[sg.Text('Window 1'), ],
-              [sg.Input(key='-IN-')],
-              [sg.Text(size=(20, 1), key='-OUTPUT-')],
-              [sg.Button('Launch 2'), sg.Button('Output')]]
-
-    return sg.Window('Window 1', layout, finalize=True)
-
-
-def make_window2():
-    layout = [[sg.Text('Window 2')],
-              [sg.Button('Exit')]]
-
-    return sg.Window('Window 2', layout, finalize=True)
+from car import Car
+from car_fleet import Fleet
 
 
 def main():
-    # Design pattern 1 - First window does not remain active
-    window2 = None
-    window1 = make_window1()
+    fleet = Fleet()
+
+    # set colour theme of the GUI package
+    sg.theme('DarkGrey2')
+
+    layout = [
+        # enclose car information form in a frame
+        [sg.Frame('Car Info', [
+            [sg.Text('Reg Number', size=(15, 1)), sg.InputText(key='reg')],
+            [sg.Text('Make', size=(15, 1)), sg.InputText(key='make')],
+            [sg.Text('Model', size=(15, 1)), sg.InputText(key='model')],
+
+            # dropdown list of years 2000 to the current year
+            [sg.Text('Year', size=(15, 1)),
+             sg.Combo(list(range(2000, datetime.datetime.now().year + 1)), default_value=2022, key='year',
+                      size=(10, 1))],
+
+            # spinner from 0 to 200,000
+            [sg.Text('Mileage', size=(15, 1)), sg.Spin(list(range(0, 201000, 10000)), key='mileage', size=(10, 1))],
+
+            # radio buttons of manual or automatic
+            [sg.Text('Gearbox', size=(15, 1)), sg.Radio('Manual', 'GEARBOX_RADIO', default=True, key='gear_man'),
+             sg.Radio('Automatic', 'GEARBOX_RADIO', key='gear_auto')],
+
+            # dropdown list of petrol, diesel, and electric
+            [sg.Text('Fuel Type', size=(15, 1)),
+             sg.Combo(['Petrol', 'Diesel', 'Electric'], key='fuel_type', default_value='Petrol', size=(10, 1))],
+
+            # spinner from 1 to 12
+            [sg.Text('Seats', size=(15, 1)), sg.Spin(list(range(1, 13)), key='seats', initial_value=5, size=(10, 1))],
+            [sg.Submit(), sg.Exit()]
+        ])]
+    ]
+
+    window = sg.Window('Car Entry Form', layout)
 
     while True:
-        window, event, values = sg.read_all_windows()
-        if event == sg.WIN_CLOSED and window == window1:
+        event, values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'Exit':
             break
 
-        if window == window1:
-            window1['-OUTPUT-'].update(values['-IN-'])
+        if event == 'Submit':
+            print(values)
 
-        if event == 'Launch 2' and not window2:
-            window1.hide()
-            window2 = make_window2()
+            # TODO: check that all fields have been filled
 
-        if window == window2 and (event in (sg.WIN_CLOSED, 'Exit')):
-            window2.close()
-            window2 = None
-            window1.un_hide()
-    window1.close()
+            new_car = Car(
+                values['reg'],
+                values['make'],
+                values['model'],
+                values['year'],
+                values['mileage'],
+                'Manual' if values['gear_man'] else 'Automatic',
+                values['fuel_type'],
+                values['seats']
+            )
+
+            fleet.add_car(new_car)
+
+            print(f'Car successfully added {new_car.reg} to fleet')
+
+    window.close()
 
 
 if __name__ == '__main__':
