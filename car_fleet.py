@@ -26,3 +26,6 @@ class Fleet:
         """Log a person renting a car from the fleet"""
 
         self.rentals[reg] = person
+
+    def __str__(self):
+        return f'Car fleet with {len(self.cars)} cars and {len(self.rentals)} current rentals'

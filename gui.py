@@ -2,19 +2,25 @@ import datetime
 
 import PySimpleGUI as sg
 
-import pandas as pd
-
 from car import Car
 from car_fleet import Fleet
+from file_manager import FileManager
+
+CAR_FLEET_FILE_PATH = 'car_fleet.pkl'
+
 
 def main():
-    fleet = Fleet()
+    if FileManager.exists(CAR_FLEET_FILE_PATH):
+        # import fleet if a prior one exists
+        fleet = FileManager.load(CAR_FLEET_FILE_PATH)
+    else:
+        # create a new fleet if there is no prior one
+        fleet = Fleet()
+
+    print(fleet)
 
     # set colour theme of the GUI package
     sg.theme('DarkGrey2')
-
-    EXCEL_FILE = 'Data_Entry.xlsx.xlsx'
-    df = pd.read_excel(EXCEL_FILE)
 
     layout = [
         # enclose car information form in a frame
@@ -54,8 +60,6 @@ def main():
             break
 
         if event == 'Submit':
-            df = df.append(values, ignore_index=True)
-            df.to_excel(EXCEL_FILE, index=False)
             sg.popup('Data Saved')
 
             # TODO: check that all fields have been filled
@@ -75,15 +79,11 @@ def main():
 
             print(f'Car successfully added {new_car.reg} to fleet')
 
-    window.close()
-    fleet.cars
+    # export updated fleet to a pickle file
+    FileManager.dump(CAR_FLEET_FILE_PATH, fleet)
 
-def upper_case(reg):
-    reg.upper()
+    window.close()
+
 
 if __name__ == '__main__':
     main()
-
-
-
-
