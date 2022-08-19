@@ -2,15 +2,19 @@ import datetime
 
 import PySimpleGUI as sg
 
+import pandas as pd
+
 from car import Car
 from car_fleet import Fleet
-
 
 def main():
     fleet = Fleet()
 
     # set colour theme of the GUI package
     sg.theme('DarkGrey2')
+
+    EXCEL_FILE = 'Data_Entry.xlsx.xlsx'
+    df = pd.read_excel(EXCEL_FILE)
 
     layout = [
         # enclose car information form in a frame
@@ -41,7 +45,7 @@ def main():
         ])]
     ]
 
-    window = sg.Window('Car Entry Form', layout)
+    window = sg.Window('Rental Information Intake Form', layout)
 
     while True:
         event, values = window.read()
@@ -50,7 +54,9 @@ def main():
             break
 
         if event == 'Submit':
-            print(values)
+            df = df.append(values, ignore_index=True)
+            df.to_excel(EXCEL_FILE, index=False)
+            sg.popup('Data Saved')
 
             # TODO: check that all fields have been filled
 
@@ -70,7 +76,14 @@ def main():
             print(f'Car successfully added {new_car.reg} to fleet')
 
     window.close()
+    fleet.cars
 
+def upper_case(reg):
+    reg.upper()
 
 if __name__ == '__main__':
     main()
+
+
+
+
