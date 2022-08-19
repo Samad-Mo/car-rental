@@ -1,5 +1,5 @@
 class Address:
-    def __init__(self, number, street, city, postcode):
+    def __init__(self, number: str, street: str, city: str, postcode: str):
         self.number = number
         self.street = street
         self.city = city

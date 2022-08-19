@@ -1,28 +1,29 @@
 from car import Car
+from person import Person
 
 
 class Fleet:
     def __init__(self):
         # key: car reg
         # value: car object
-        self.cars = {}
+        self.cars: dict[str, Car] = {}
 
         # key: car reg
         # value: person object
-        self.rentals = {}
+        self.rentals: dict[str, Person] = {}
 
-    def add_car(self, car_obj):
+    def add_car(self, car_obj: Car) -> None:
         """Add a new car object to the fleet"""
 
         # add car object to the dictionary
         self.cars[car_obj.reg] = car_obj
 
-    def get_car(self, reg):
+    def get_car(self, reg: str) -> Car:
         """Get car object from registration number"""
 
         return self.cars[reg]
 
-    def add_rental(self, reg, person):
+    def add_rental(self, reg: str, person: Person) -> None:
         """Log a person renting a car from the fleet"""
 
         self.rentals[reg] = person
