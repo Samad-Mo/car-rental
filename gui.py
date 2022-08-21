@@ -2,9 +2,9 @@ import datetime
 
 import PySimpleGUI as sg
 
-from car import Car
-from car_fleet import Fleet
-from file_manager import FileManager
+from entities.car import Car
+from entities.car_fleet import Fleet
+from utils.file_manager import FileManager
 
 CAR_FLEET_FILE_PATH = 'car_fleet.pkl'
 

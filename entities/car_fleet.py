@@ -1,5 +1,5 @@
-from car import Car
-from person import Person
+from entities.car import Car
+from entities.person import Person
 
 
 class Fleet:
